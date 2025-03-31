@@ -1,18 +1,13 @@
 
-import './App.css'
+import './App.css';
+import Header from './components/Header.jsx'
 
 function App() {
-    const name = 'Francois'
-    const x = false
-  return (
-      <>
-          <h1>Hello from React</h1>
-          <h2>Allo {name}</h2>
-          <h2>Calcul {1 +1}</h2>
-          <h2>Conditionnel {x ? 'vrai' : 'faux'}</h2>
-      </>
-  )
-
+    return (
+        <div className='container'>
+            <Header/>
+        </div>
+    );
 }
 
-export default App
+export default App;
