@@ -2,6 +2,7 @@
 import './App.css';
 import Header from './components/Header.jsx'
 import Tasks from './components/Tasks.jsx'
+import AddTask from './components/AddTask.jsx';
 import {useState} from "react";
 
 
@@ -44,6 +45,7 @@ function App() {
     return (
         <div className='container'>
             <Header title="Task Tracker"/>
+            <AddTask/>
             {tasks.length > 0 ?
                 <Tasks tasks={tasks}
                        onDelete={deleteTask}
