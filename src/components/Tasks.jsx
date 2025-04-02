@@ -1,32 +1,13 @@
-import {useState} from "react";
+import Task from "./Task.jsx";
 
-
-const Tasks = () => {
-    const [tasks, setTasks] = useState([
-            {
-                id: 1,
-                text: 'Preparer mon cours',
-                day: '19 Avril @ 14:25',
-                reminder: true,
-            },
-            {
-                id: 2,
-                text: 'Commencer mon TP',
-                day: '20 Septembre @ 09:00',
-                reminder: false,
-            },
-            {
-                id: 3,
-                text: 'Faire des tests',
-                day: '23 Septembre @ 10:00',
-                reminder: false,
-            },
-    ]
-    )
+const Tasks = ({tasks}) => {
     return (
+        // tasks.push()  ne fonctionne pas puisque tasks est immuable
+        // il faut plutot faire la ligne suivante
+        // setTasks([...tasks, {}])  utilise le spread operator ...
         <>
             {tasks.map((task) => (
-                <h3 key={task.id}>{task.text}</h3>
+                <Task key={task.id} task={task}/>
             ))}
         </>
     )
