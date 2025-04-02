@@ -1,9 +1,5 @@
 
-const Button = ({color, text}) => {
-    const onClick = () => {
-        console.log('button pressed')
-    }
-
+const Button = ({color, text, onClick}) => {
     return (
         <button
             onClick={onClick}
