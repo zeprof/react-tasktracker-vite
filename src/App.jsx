@@ -3,32 +3,21 @@ import './App.css';
 import Header from './components/Header.jsx'
 import Tasks from './components/Tasks.jsx'
 import AddTask from './components/AddTask.jsx';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 function App() {
     const [showAddTask, setShowAddTask] = useState(false)
-    const [tasks, setTasks] = useState([
-            {
-                id: 1,
-                text: 'Preparer mon cours',
-                day: '19 Avril @ 14:25',
-                reminder: true,
-            },
-            {
-                id: 2,
-                text: 'Commencer mon TP',
-                day: '20 Septembre @ 09:00',
-                reminder: false,
-            },
-            {
-                id: 3,
-                text: 'Faire des tests',
-                day: '23 Septembre @ 10:00',
-                reminder: false,
-            },
-        ]
-    )
+    const [tasks, setTasks] = useState()
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            const res = await fetch('http://localhost:8080/todos')
+            const data = await res.json()
+            console.log(data)
+        }
+        fetchTasks()
+    })
 
     const addTask = (task) => {
         const id = Math.floor(Math.random() * 10000) + 1
@@ -54,7 +43,7 @@ function App() {
             <Header title="Task Tracker" onAdd={() => setShowAddTask(!showAddTask)}
                     showAdd={showAddTask}/>
             {showAddTask && <AddTask onAdd={addTask} />}
-            {tasks.length > 0 ?
+            {tasks != null && tasks.length > 0 ?
                 <Tasks tasks={tasks}
                        onDelete={deleteTask}
                        onToggle={toggleReminder}/>
