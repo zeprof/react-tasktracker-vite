@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header.jsx'
 import Tasks from './components/Tasks.jsx'
 import AddTask from './components/AddTask.jsx';
+import {fetchTasks, fetchTask, postTask, deleteTaskById, toggleReminderByTask} from "./api/api.jsx";
 import {useEffect, useState} from "react";
 
 
@@ -19,35 +20,14 @@ function App() {
     }, [])
     // Ajout de dependency array pour prevenir le 'useEffect' a chaquer 'render()'
 
-    const fetchTasks = async () => {
-        const res = await fetch('http://localhost:8080/todos')
-        const data = await res.json()
-        return data
-    }
-
-    const fetchTask = async(id) => {
-        const res = await fetch(`http://localhost:8080/todos/${id}`)
-        const data = await res.json()
-        return data
-    }
-
     const addTask = async (task) => {
-        const res = await fetch('http://localhost:8080/todos',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(task)
-            })
+        const res = await postTask(task)
         const data = await res.json()
         setTasks([...tasks, data])
     }
 
     const deleteTask = async (id) => {
-        await fetch(`http://localhost:8080/todos/${id}`, {
-            method: 'DELETE'
-        })
+        await deleteTaskById(id)
         setTasks(tasks.filter((task) => task.id !== id))
     }
 
@@ -56,14 +36,7 @@ function App() {
         const updTask = {...taskToToggle,
             reminder: !taskToToggle.reminder}
 
-        await fetch(`http://localhost:8080/todos/${id}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(updTask)
-            })
+        await toggleReminderByTask(updTask)
 
         setTasks(
             tasks.map(
