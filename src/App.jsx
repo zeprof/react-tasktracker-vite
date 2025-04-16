@@ -1,9 +1,15 @@
 import './App.css';
-import Header from './components/Header.jsx'
-import Tasks from './components/Tasks.jsx'
-import AddTask from './components/AddTask.jsx';
 import {fetchTasks, fetchTask, postTask, deleteTaskById, toggleReminderByTask} from "./api/api.jsx";
 import {useEffect, useState} from "react";
+import RootLayout from "./components/RouteLayout.jsx";
+import TodoApp from "./components/TodoApp.jsx"
+import {
+    RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
+} from 'react-router';
+import About from "./components/About.jsx";
 
 
 function App() {
@@ -93,20 +99,25 @@ function App() {
         return <div>Loading tasks...</div>;
     }
 
+    const router = createBrowserRouter(
+        createRoutesFromElements(
+            <Route path="/" element={<RootLayout />}>
+                <Route index element={<TodoApp
+                    error={error}
+                    tasks={tasks}
+                    showAddTask={showAddTask}
+                    setShowAddTask={setShowAddTask}
+                    addTask={addTask}
+                    deleteTask={deleteTask}
+                    toggleReminder={toggleReminder}
+                />} />
+                <Route path="/about" element={<About />} />
+            </Route>
+        )
+    );
+
     return (
-        <>
-            {error && <div style={{color: 'red'}}>Error loading tasks: {error}</div>}
-            <div className='container'>
-                <Header title="Task Tracker" onAdd={() => setShowAddTask(!showAddTask)}
-                        showAdd={showAddTask}/>
-                {showAddTask && <AddTask onAdd={addTask}/>}
-                {tasks != null && tasks.length > 0 ?
-                    <Tasks tasks={tasks}
-                           onDelete={deleteTask}
-                           onToggle={toggleReminder}/>
-                    : 'No tasks'}
-            </div>
-        </>
+        <RouterProvider router={router} />
     );
 }
 
