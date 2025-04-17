@@ -1,6 +1,6 @@
 import Task from "./Task.jsx";
 
-const Tasks = ({tasks, onDelete, onToggle}) => {
+const Tasks = ({tasks, onDelete, onToggle, onEdit}) => {
     return (
         // tasks.push()  ne fonctionne pas puisque tasks est immuable
         // il faut plutot faire la ligne suivante
@@ -10,7 +10,8 @@ const Tasks = ({tasks, onDelete, onToggle}) => {
                 <Task key={task.id}
                       task={task}
                       onDelete={onDelete}
-                      onToggle={onToggle}/>
+                      onToggle={onToggle}
+                      onEdit={onEdit}/>
             ))}
         </>
     )

@@ -1,10 +1,13 @@
 import Header from "./Header.jsx";
 import AddTask from "./AddTask.jsx";
 import Tasks from "./Tasks.jsx";
+import {useState} from "react";
 
-function TodoApp({error, tasks, showAddTask, setShowAddTask, addTask, deleteTask, toggleReminder}) {
+function TodoApp({error, tasks, addTask, deleteTask, toggleReminder, onEdit}) {
+    const [showAddTask, setShowAddTask] = useState(false)
+
     return (<>
-            {error && <div style={{color: 'red'}}>Error loading tasks: {error}</div>}
+            {error && <div style={{color: 'red'}}>Error: {error}</div>}
             <div className='container'>
                 <Header title="Task Tracker" onAdd={() => setShowAddTask(!showAddTask)}
                         showAdd={showAddTask}/>
@@ -12,7 +15,8 @@ function TodoApp({error, tasks, showAddTask, setShowAddTask, addTask, deleteTask
                 {tasks != null && tasks.length > 0 ?
                     <Tasks tasks={tasks}
                            onDelete={deleteTask}
-                           onToggle={toggleReminder}/>
+                           onToggle={toggleReminder}
+                           onEdit={onEdit}/>
                     : 'No tasks'}
             </div>
         </>

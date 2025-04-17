@@ -7,13 +7,13 @@ import {
     RouterProvider,
     createBrowserRouter,
     createRoutesFromElements,
-    Route,
+    Route, useNavigate,
 } from 'react-router';
 import About from "./components/About.jsx";
+import EditTask from "./components/EditTask.jsx";
 
 
 function App() {
-    const [showAddTask, setShowAddTask] = useState(false)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); // State to hold error messages
     const [tasks, setTasks] = useState()
@@ -95,29 +95,52 @@ function App() {
         }
     }
 
+    const editTask = async (editedTask) => {
+        setLoading(true);
+        setError(null);
+        try {
+
+            setTasks(
+                tasks.map(
+                    (task) => task.id === editedTask.id ?
+                        {...editedTask} : task
+                )
+            )
+
+        } catch (err) {
+            setError(err.message || 'An unexpected error occurred.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
     if (loading) {
         return <div>Loading tasks...</div>;
     }
 
+    const onEdit = (id) => {
+        console.log(id)
+    }
+
     const router = createBrowserRouter(
         createRoutesFromElements(
-            <Route path="/" element={<RootLayout />}>
+            <Route path="/" element={<RootLayout/>}>
                 <Route index element={<TodoApp
                     error={error}
                     tasks={tasks}
-                    showAddTask={showAddTask}
-                    setShowAddTask={setShowAddTask}
                     addTask={addTask}
                     deleteTask={deleteTask}
                     toggleReminder={toggleReminder}
-                />} />
-                <Route path="/about" element={<About />} />
+                    onEdit={onEdit}
+                />}/>
+                <Route path=":taskId" element={<EditTask tasks={tasks} editTask={editTask}/>}/>
+                <Route path="/about" element={<About/>}/>
             </Route>
         )
     );
 
     return (
-        <RouterProvider router={router} />
+        <RouterProvider router={router}/>
     );
 }
 
