@@ -68,7 +68,7 @@ export async function deleteTaskById(id) {
     }
 }
 
-export async function toggleReminderByTask(task) {
+export async function updateTask(task) {
     try {
         const res = await fetch(`${BASE_URL}/todos/${task.id}`,
             {

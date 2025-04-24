@@ -1,5 +1,5 @@
 import './App.css';
-import {fetchTasks, fetchTask, postTask, deleteTaskById, toggleReminderByTask} from "./api/api.jsx";
+import {fetchTasks, fetchTask, postTask, deleteTaskById, updateTask} from "./api/api.jsx";
 import {useEffect, useState} from "react";
 import RootLayout from "./components/RouteLayout.jsx";
 import TodoApp from "./components/TodoApp.jsx"
@@ -30,8 +30,7 @@ function App() {
             setError(null);   // Clear previous errors
             try {
                 await sleep(1000)
-                const data = await fetchTasks();
-                setTasks(data);
+                await refreshTasks()
             } catch (err) {
                 console.error("Error caught in component:", err);
                 // Set the error state with a user-friendly message
@@ -42,6 +41,21 @@ function App() {
         };
         getTasks();
     }, []); // Ajout de dependency array pour prevenir le 'useEffect' a chaquer 'render()'
+
+    const refreshTasks = async () => {
+        setLoading(true); // Start loading
+        setError(null);   // Clear previous errors
+        try {
+            const data = await fetchTasks();
+            setTasks(data);
+        } catch (err) {
+            console.error("Error caught in component:", err);
+            // Set the error state with a user-friendly message
+            setError(err.message || 'An unexpected error occurred.');
+        } finally {
+            setLoading(false); // Stop loading regardless of success or error
+        }
+    }
 
 
     const addTask = async (task) => {
@@ -81,32 +95,13 @@ function App() {
                 reminder: !taskToToggle.reminder
             }
 
-            await toggleReminderByTask(updTask)
+            await updateTask(updTask)
             setTasks(
                 tasks.map(
                     (task) => task.id === id ?
                         {...task, reminder: updTask.reminder} : task
                 )
             )
-        } catch (err) {
-            setError(err.message || 'An unexpected error occurred.');
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const editTask = async (editedTask) => {
-        setLoading(true);
-        setError(null);
-        try {
-
-            setTasks(
-                tasks.map(
-                    (task) => task.id === editedTask.id ?
-                        {...editedTask} : task
-                )
-            )
-
         } catch (err) {
             setError(err.message || 'An unexpected error occurred.');
         } finally {
@@ -133,7 +128,7 @@ function App() {
                     toggleReminder={toggleReminder}
                     onEdit={onEdit}
                 />}/>
-                <Route path=":taskId" element={<EditTask tasks={tasks} editTask={editTask}/>}/>
+                <Route path=":taskId" element={<EditTask refreshTasks={refreshTasks}/>}/>
                 <Route path="/about" element={<About/>}/>
             </Route>
         )

@@ -1,7 +1,7 @@
 import { FaTimes, FaPen} from 'react-icons/fa'
 import {useNavigate} from "react-router";
 
-const Task = ({task, onDelete, onToggle, onEdit}) => {
+const Task = ({task, onDelete, onToggle}) => {
     const navigate = useNavigate();
     return (
         <div className={`task ${task.reminder ? 'reminder' : ''}`}
